@@ -24,8 +24,8 @@ PGPLOTDIR = /usr/local/lib
 X11DIR = /usr/X11R6/lib
 # libraries for linking PGPLOT
 PLPLOTDIR = -I/usr/local/Cellar/plplot/5.9.11/lib/fortran/modules/plplot -I/usr/local/Cellar/plplot/5.9.11/include/plplot -L/usr/local/Cellar/plplot/5.9.11/lib
-LIBS = $(PLPLOTDIR) -lplplotf95d -lplplotf95cd
-#LIBS = -L$(PGPLOTDIR) -L$(X11DIR) -lX11 -lpgplot -lpng
+#LIBS = $(PLPLOTDIR) -lplplotf95d -lplplotf95cd
+LIBS = -L$(PGPLOTDIR) -L$(X11DIR) -lX11 -lpgplot -lpng
 # libraries for linking CFITSIO
 LIBS2 = -L$(PGPLOTDIR) -L$(X11DIR) -L$(FITSIODIR) -lX11 -lpgplot -lcfitsio -lpng
 #Directory where executable are placed
@@ -36,15 +36,17 @@ UTILS = utils/
 #Listing of programs to create.
 all: gptest
 
-gptestincl = precision.o getdata.o 
+gptestincl = precision.o getdata.o plotdata.o
 gptest: gptest.f90 $(gptestincl)
-	$(F90) $(LFLAGS) -o $(BIN)$@ gptest.f90 $(gptestincl) 
+	$(F90) $(LFLAGS) -o $(BIN)$@ gptest.f90 $(gptestincl) $(LIBS)
 
 #building object libraries
 precision.o: $(UTILS)precision.f90
 	$(F90) $(FFLAGS) $(UTILS)precision.f90
 getdata.o: $(UTILS)getdata.f90
 	$(F90) $(FFLAGS) $(UTILS)getdata.f90
+plotdata.o: $(UTILS)plotdata.f90
+	$(F90) $(FFLAGS) $(UTILS)plotdata.f90
 
 # Removing object files
 .PHONY : clean
