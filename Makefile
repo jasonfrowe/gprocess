@@ -36,7 +36,7 @@ UTILS = utils/
 #Listing of programs to create.
 all: gptest
 
-gptestincl = precision.o getdata.o plotdata.o
+gptestincl = precision.o getdata.o plotdata.o fitline.o plotline.o
 gptest: gptest.f90 $(gptestincl)
 	$(F90) $(LFLAGS) -o $(BIN)$@ gptest.f90 $(gptestincl) $(LIBS)
 
@@ -47,6 +47,10 @@ getdata.o: $(UTILS)getdata.f90
 	$(F90) $(FFLAGS) $(UTILS)getdata.f90
 plotdata.o: $(UTILS)plotdata.f90
 	$(F90) $(FFLAGS) $(UTILS)plotdata.f90
+fitline.o: $(UTILS)fitline.f90
+	$(F90) $(FFLAGS) $(UTILS)fitline.f90
+plotline.o: $(UTILS)plotline.f90
+	$(F90) $(FFLAGS) $(UTILS)plotline.f90
 
 # Removing object files
 .PHONY : clean

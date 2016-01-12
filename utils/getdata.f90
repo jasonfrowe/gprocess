@@ -2,6 +2,7 @@ subroutine getdata(filename,npt,nmax,x,y,yerr)
 use precision
 implicit none
 integer :: npt,nmax,nunit,filestatus,i
+real(double) :: minx
 real(double), dimension(:) :: x,y,yerr
 character(80) :: filename
 
@@ -34,4 +35,9 @@ enddo
 close(nunit) !close file
 npt=i-1
 
+minx=minval(x(1:npt))
+x(1:npt)=x(1:npt)-minx
+
+
+return
 end subroutine getdata
