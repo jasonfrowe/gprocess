@@ -1,11 +1,11 @@
 program gptest
 use precision
 implicit none
-integer :: iargc,nmax,npt,npars
+integer :: iargc,nmax,npt,npars,info
 real(double) :: chisq,bpix
 real, allocatable, dimension(:) :: bb !contains dimensions of plot
 real(double), allocatable, dimension(:) :: x,y,yerr,ans,eans,pars
-real(double), allocatable, dimension(:,:) :: Kernel
+real(double), allocatable, dimension(:,:) :: Kernel,Kfac
 character(80) :: filename
 
 interface
@@ -114,6 +114,12 @@ call makekernel(Kernel,npt,x,yerr,npars,pars)
 call pgpage()
 bpix=1.0e30 !cut off for bright pixels
 call displaykernel(npt,npt,Kernel,bpix)
+
+!Cholesky factorization
+allocate(Kfac(npt,npt))
+Kfac=Kernel
+call dpotrf('U',npt,Kfac,npt,info)
+
 
 call pgclos()
 
