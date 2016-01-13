@@ -36,7 +36,7 @@ UTILS = utils/
 #Listing of programs to create.
 all: gptest
 
-gptestincl = precision.o getdata.o plotdata.o fitline.o plotline.o
+gptestincl = precision.o getdata.o plotdata.o fitline.o plotline.o makekernel.o displaykernel.o heatlut.o stdev.o rqsort.o
 gptest: gptest.f90 $(gptestincl)
 	$(F90) $(LFLAGS) -o $(BIN)$@ gptest.f90 $(gptestincl) $(LIBS)
 
@@ -51,6 +51,16 @@ fitline.o: $(UTILS)fitline.f90
 	$(F90) $(FFLAGS) $(UTILS)fitline.f90
 plotline.o: $(UTILS)plotline.f90
 	$(F90) $(FFLAGS) $(UTILS)plotline.f90
+makekernel.o: $(UTILS)makekernel.f90
+	$(F90) $(FFLAGS) $(UTILS)makekernel.f90
+displaykernel.o: $(UTILS)displaykernel.f90
+	$(F90) $(FFLAGS) $(UTILS)displaykernel.f90
+heatlut.o: $(UTILS)heatlut.f90
+	$(F90) $(FFLAGS) $(UTILS)heatlut.f90
+stdev.o: $(UTILS)stdev.f
+	$(F90) $(FFLAGS) $(UTILS)stdev.f
+rqsort.o: $(UTILS)rqsort.f
+	$(F90) $(FFLAGS) $(UTILS)rqsort.f
 
 # Removing object files
 .PHONY : clean
