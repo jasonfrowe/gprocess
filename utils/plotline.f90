@@ -16,7 +16,7 @@ px(1)=bb(1)
 px(2)=bb(2)
 py(1)=rans(1)+px(1)*rans(2)
 py(2)=rans(1)+px(2)*rans(2)
-call pgsci(2) !change colour
+call pgsci(5) !change colour
 call pgline(nplot,px,py)
 call pgsci(1)
 deallocate(px,py)
