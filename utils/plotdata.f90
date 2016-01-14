@@ -29,7 +29,7 @@ endif
 
 !plotting commands
 call pgsci(1)
-call pgvport(0.10,0.95,0.15,0.95) !make room around the edges for labels
+call pgvport(0.15,0.95,0.15,0.95) !make room around the edges for labels
 call pgwindow(bb(1),bb(2),bb(3),bb(4)) !plot scale
 call pgbox("BCNTS1",0.0,0,"BCNTS",0.0,0)
 call pglabel("X","Y","")  !labels

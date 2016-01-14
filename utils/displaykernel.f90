@@ -71,7 +71,7 @@ else
    std=1.0
 endif
 deallocate(a,p)
-write(0,*) "Med,std: ",med,std
+!write(0,*) "Med,std: ",med,std
 
 allocate(ia(nxmax,nymax))
 
@@ -149,6 +149,7 @@ y2=real(nr(4)-nr(3))/xr
 call pgpixl(ia,nxmax,nymax,nr(1),nr(2),nr(3),nr(4),rj(1),rj(2),rj(3),rj(4))
 call pgsci(1)
 call pgbox("BCNTS1",0.0,0,"BCNTS1",0.0,0)
+call pgsch(1.0) !reset font size
 
 deallocate(ia,lparray)
 

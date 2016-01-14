@@ -38,8 +38,8 @@ npt=i-1
 minx=minval(x(1:npt))
 x(1:npt)=x(1:npt)-minx
 mean=Sum(y(1:npt))/dble(npt)
-y(1:npt)=y(1:npt)/mean
-
+y(1:npt)=y(1:npt)-mean
+!yerr(1:npt)=yerr(1:npt)/mean
 
 return
 end subroutine getdata
