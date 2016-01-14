@@ -2,7 +2,7 @@ subroutine getdata(filename,npt,nmax,x,y,yerr)
 use precision
 implicit none
 integer :: npt,nmax,nunit,filestatus,i
-real(double) :: minx
+real(double) :: minx,mean
 real(double), dimension(:) :: x,y,yerr
 character(80) :: filename
 
@@ -37,6 +37,8 @@ npt=i-1
 
 minx=minval(x(1:npt))
 x(1:npt)=x(1:npt)-minx
+mean=Sum(y(1:npt))/dble(npt)
+y(1:npt)=y(1:npt)/mean
 
 
 return

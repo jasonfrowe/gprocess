@@ -16,15 +16,16 @@ yp=real(y(1:npt))
 yperr=real(yerr(1:npt))
 
 !calculate size of plotting window
-diff=maxval(xp)-minval(xp)
-bb(1)=minval(xp)-0.1*diff
-bb(2)=maxval(xp)+0.1*diff
-diff=maxval(yp)-minval(yp)
-bb(3)=minval(yp)-0.1*diff
-bb(4)=maxval(yp)+0.1*diff
-
-bb(2)=200.0
-bb(3)=150.0
+if(bb(1).eq.bb(2))then
+   diff=maxval(xp)-minval(xp)
+   bb(1)=minval(xp)-0.1*diff
+   bb(2)=maxval(xp)+0.1*diff
+endif
+if(bb(3).eq.bb(4))then
+   diff=maxval(yp)-minval(yp)
+   bb(3)=minval(yp)-0.1*diff
+   bb(4)=maxval(yp)+0.1*diff
+endif
 
 !plotting commands
 call pgsci(1)

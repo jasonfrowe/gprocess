@@ -13,7 +13,6 @@ real(double) :: bpix,maxp,minp,z1,z2,med,std,stdev2,lmin,lmax, &
 real(double), dimension(:,:) :: parray
 real(double), allocatable, dimension(:) :: a
 real(double), allocatable, dimension(:,:) :: lparray
-character(80) :: tchar
 
 allocate(lparray(nxmax,nymax)) !used for making a log-scale plot
 
@@ -35,7 +34,7 @@ do i=1,nxmax
       endif
    enddo
 enddo
-write(0,*) "Min/Max:",minp,maxp
+!write(0,*) "Min/Max:",minp,maxp
 nr(1)=1
 nr(3)=1
 nr(2)=nxmax
@@ -51,8 +50,8 @@ rj=real(nr)
 
 allocate(a(npt),p(npt))
 k=0
-do i=nr(1),nr(2),5
-   do j=nr(3),nr(4),5
+do i=nr(1),nr(2)
+   do j=nr(3),nr(4)
       if(parray(i,j).lt.bpix)then
          k=k+1
          a(k)=parray(i,j)
@@ -72,7 +71,7 @@ else
    std=1.0
 endif
 deallocate(a,p)
-!write(0,*) "Med,std: ",med,std
+write(0,*) "Med,std: ",med,std
 
 allocate(ia(nxmax,nymax))
 
@@ -107,10 +106,8 @@ z2=log10(maxp-minlp+1.0)
 do i=nr(1),nr(2)
    do j=nr(3),nr(4)
       if(parray(i,j).lt.bpix)then
-!         IA(i,j)=int((lparray(i,j)-z1)/(z2-z1)*(NCOL-1))+16
          IA(i,j)=int((lparray(i,j)-z1)/(z2-z1)*dble(NCOL-1))+16
          if(lparray(i,j).le.z1) then
-!            write(0,*) "underflow: ",i,j,lparray(i,j)
             ia(i,j)=16
          endif
       else
@@ -119,79 +116,41 @@ do i=nr(1),nr(2)
       if(lparray(i,j).gt.z2) ia(i,j)=ncol+15
    enddo
 enddo
-!write(0,*) "IA:",ia(425,738),lparray(425,738)
 
 !set up pgplot window
-!call pgscr(0,1.0,1.0,1.0)
 call pgscr(15,0.0,0.3,0.2)
 
 call pgsch(1.5) !make the font a bit bigger
 call pgslw(3)  !make the lines a bit thicker
 
-!call pgscr(1,0.0,0.0,0.0)
 call pgsci(1)
 call pgvport(0.0,1.00,0.0,1.0)
 call pgwindow(0.0,1.0,0.0,1.0)
-!call PGRECT (0.0, 1.0, 0.0, 1.0)
 
-call pgvport(0.10,0.95,0.15,0.95) !make room around the edges for labels
+call pgvport(0.15,0.95,0.15,0.95) !make room around the edges for labels
 call pgsci(1)
 call pgwindow(rj(1),rj(2),rj(3),rj(4)) !plot scale
 call pgbox("BCNTS1",0.0,0,"BCNTS1",0.0,0)
 call pglabel("X1","X2","")
 call pgsci(1)
 
-
-!open(unit=31,file="/iraf/iraf/unix/sun/heat.lut",status='old')
-!open(unit=31,file="heat.lut",status='old')
-!read(31,*) dumi
 do i=1,ncol
-!   read(31,*) r,g,b
-!   read(31,*) dumr,dumr,dumr
-!   read(31,*) dumr,dumr,dumr
-!   read(31,*) dumr,dumr,dumr
    call heatlut(i*4-3,r,g,b)
    call heatlut(i*4-2,r,g,b)
    call heatlut(i*4-1,r,g,b)
    call heatlut(i*4  ,r,g,b)
-
    CALL PGSCR(I+15, R, G, B)
-!   CALL PGSCR(I+15, sqrt(R), sqrt(G), sqrt(B))
-!   CALL PGSCR(I+15, log10(R*9.0+1.0), log10(G*9.0+1.0), log10(B*9.0+1.0))
-!   R = REAL(I-1)/REAL(NCOL-1)*0.8 + 0.2
-!   G = MAX(0.0, 2.0*REAL(I-1-NCOL/2)/REAL(NCOL-1))
-!   B = 0.2 + 0.4*REAL(NCOL-I)/REAL(NCOL)
-!   CALL PGSCR(ncol-I+16, R, G, B)
 enddo
-!close(31)
-
-!do i=1,ncol
-!   Red = REAL(I-1)/REAL(NCOL-1)*0.8 + 0.2
-!   Green = MAX(0.0, 2.0*REAL(I-1-NCOL/2)/REAL(NCOL-1))
-!   Blue = 0.2 + 0.4*REAL(NCOL-I)/REAL(NCOL)
-!   R = 1.0 - real(i)/real(ncol)
-!   G = 1.0 - real(i)/real(ncol)*0.5
-!   B = 1.0 - real(i)/real(ncol)*0.3
-!   R = real(i)/real(ncol)
-!   G = real(i)/real(ncol)*0.5
-!   B = real(i)/real(ncol)*0.3
-!   CALL PGSCR(I+15, R, G, B)
-!enddo
 
 xr=real(max(nr(2)-nr(1),nr(4)-nr(3)))
 x2=real(nr(2)-nr(1))/xr
 y2=real(nr(4)-nr(3))/xr
-!write(0,*) "x2,y2: ",x2,y2
-!call pgpixl(ia,nxmax,nymax,nr(1),nr(2),nr(3),nr(4),0.0,x2,0.0,y2)
+
 call pgpixl(ia,nxmax,nymax,nr(1),nr(2),nr(3),nr(4),rj(1),rj(2),rj(3),rj(4))
 call pgsci(1)
 call pgbox("BCNTS1",0.0,0,"BCNTS1",0.0,0)
 
 deallocate(ia,lparray)
-
-
-!write(11,501) tavg,minp,maxp,med,std,z1,z2
-501 format(7(1PE17.10,1X))
 
 return
 end subroutine displaykernel

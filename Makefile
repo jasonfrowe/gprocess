@@ -7,8 +7,8 @@ F77 = ifort
 OPT1 = -O3 -fast -parallel -ipo
 #OPT1 = -O0 -g -CB
 #OPT1 = -O3
-#OPT2 = -heap-arrays 0
-OPT2 = 
+OPT2 = -heap-arrays 0
+#OPT2 = 
 FFLAGS = -c $(OPT1) $(OPT2)
 #FFLAGS = -c -O0 -g -CB -warn $(OPT2)
 #linking flags
@@ -36,7 +36,7 @@ UTILS = utils/
 #Listing of programs to create.
 all: gptest
 
-gptestincl = precision.o getdata.o plotdata.o fitline.o plotline.o makekernel.o displaykernel.o heatlut.o stdev.o rqsort.o lapack.o blas.o
+gptestincl = precision.o getdata.o plotdata.o fitline.o plotline.o makekernel.o displaykernel.o heatlut.o stdev.o rqsort.o lapack.o blas.o plotsamples.o
 gptest: gptest.f90 $(gptestincl)
 	$(F90) $(LFLAGS) -o $(BIN)$@ gptest.f90 $(gptestincl) $(LIBS) 
 
@@ -65,6 +65,8 @@ lapack.o: $(UTILS)lapack.f
 	$(F90) $(FFLAGS) $(UTILS)lapack.f
 blas.o: $(UTILS)blas.f
 	$(F90) $(FFLAGS) $(UTILS)blas.f
+plotsamples.o: $(UTILS)plotsamples.f90
+	$(F90) $(FFLAGS) $(UTILS)plotsamples.f90
 
 # Removing object files
 .PHONY : clean
