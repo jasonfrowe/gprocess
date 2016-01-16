@@ -97,11 +97,15 @@ enddo
 z1=log10(max(0.0,med-2.0*std-minlp)+1.0)
 z2=log10(maxp-minlp+1.0)
 
-!uncommnet for a sqrt scale opposed to log
+!uncomment following 3 lines for a sqrt scale opposed to log
 !lparray=sqrt(parray-minp)
 !z1=sqrt(med-std-minp)
 !z2=sqrt(maxp-minp)
 
+!linear display
+lparray(nr(1):nr(2),nr(3):nr(4))=parray(nr(1):nr(2),nr(3):nr(4))
+z1=minval(lparray(nr(1):nr(2),nr(3):nr(4)))
+z2=maxval(lparray(nr(1):nr(2),nr(3):nr(4)))
 
 do i=nr(1),nr(2)
    do j=nr(3),nr(4)

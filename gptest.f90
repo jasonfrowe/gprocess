@@ -178,11 +178,21 @@ dbb=dble(bb) !we are going to sample around the 'X'-axis of the plot. Need dbles
 do i=1,npt1  !create new sampling intervals
    x1(i)=dbb(1)+(dbb(2)-dbb(1))/dble(npt1-1.0d0)*dble(i-1)
 enddo
-call makekernel(newKernel,npt1,npt,x1,x,npt,yerr,npars,pars) !make new Kernel
+yerr2=0.0d0
+call makekernel(newKernel,npt1,npt,x1,x,npt,yerr2,npars,pars) !make new Kernel
 bpix=1.0e30 !cut off for bright pixels
 call displaykernel(npt1,npt,newKernel,bpix) !display our new Kernel - not square!
 
+!yerr2=0.0d0
+!call makekernel(Kernel,npt,npt,x,x,npt,yerr2,npars,pars)
+!mu=matmul(Kernel,alpha)
+!do i=1,npt
+!   write(0,*) y(i),mu(i)
+!enddo
+
 mu=matmul(newKernel,alpha) !to get the predicted dataset we multiply matrices
+
+
 
 !lets calculate the uncertainty on the predicted dataset
 call pgpage() !fresh page for plotting
@@ -212,6 +222,40 @@ call pgpage()!fresh page for plotting
 call plotdata(npt,x,y,yerr,bb) !plot our original dataset
 call plotsamples(npt1,x1,mu,std) !plot our predicted sample set on top.
 !call plotline(bb,ans,eans)
+deallocate(mu,std,x1,yerr2,newKernel,cov,newKernelT)
+
+npt1=2
+allocate(mu(npt1),std(npt1),x1(npt1),newKernel(npt1,npt),yerr2(npt1))
+x1(1)=0.0d0
+x1(2)=x(npt)
+yerr2=0.0d0
+call makekernel(newKernel,npt1,npt,x1,x,npt,yerr2,npars,pars)
+mu=matmul(newKernel,alpha)
+allocate(newKernelT(npt,npt1))  !allocate space for transposed Kernel
+newKernelT=transpose(newKernel) !create transpose
+allocate(cov(npt1,npt1))
+!make Kernel based on predicted dataset
+call makekernel(cov,npt1,npt1,x1,x1,npt,yerr2,npars,pars)
+!now we call the Solver again.  We will feed in the new transposed Kernel
+nrhs=npt1 !note, more than one column!
+call dpotrs('U',npt,nrhs,Kfac,npt,newKernelT,npt,info) !Solve
+if (info.ne.0) then !error check
+   write(0,*) "Solver failed with newKernelT"
+   write(0,*) "dpotrs info: ",info
+   stop
+endif
+!calculate covariance matrix
+cov=cov-matmul(newKernel,newKernelT)
+do i=1,npt1
+   std(i)=sqrt(cov(i,i)) !use diagonals as estimate of standard deviation
+enddo
+500 format(A6,F6.2,A5,F6.2)
+write(0,500) "mu1:  ",mu(1)," +/- ",std(1)
+write(0,500) "mu2:  ",mu(2)," +/- ",std(2)
+write(0,500) "diff: ",mu(1)-mu(2)," +/- ",                              &
+   sqrt(std(1)*std(1)+std(2)+std(2))
+write(0,500) "rate: ",(mu(1)-mu(2))/(x1(2)-x1(1))," +/- ",                &
+   sqrt(std(1)*std(1)+std(2)+std(2))/(x1(2)-x1(1))
 
 call pgclos() !close plotter
 
