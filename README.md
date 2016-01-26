@@ -1,4 +1,5 @@
 Project to show how to use Gaussian Processes when fitting data.
+Slide Deck [link](https://www.dropbox.com/s/fnw23qs5zdr3fnp/UdeMPizzaTalk.pdf?dl=0)
 
 Using [homebrew](http://brew.sh) is probably the least painful way to get the FORTRAN software working on your Mac.
 
