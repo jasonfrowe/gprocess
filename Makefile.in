@@ -1,9 +1,9 @@
 #Makefile Template
-F90 = ifort
-LFLAGS =  -L/usr/lib -L/usr/local/lib -L/usr/X11/lib
-XFLAGS = -lX11
-PFLAGS = -lpng -lpgplot
-CFLAGS = -lcfitsio
+F90 = @FC@
+LFLAGS = @LFLAGS@
+XFLAGS = @XFLAGS@
+PFLAGS = @PGPLOTLIB@
+CFLAGS = @CFITSIOLIB@
 FFLAGS = -O3
 BIN = ./bin/
 UTILS = utils/

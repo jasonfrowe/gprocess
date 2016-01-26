@@ -135,7 +135,7 @@ call pgvport(0.15,0.95,0.15,0.95) !make room around the edges for labels
 call pgsci(1)
 call pgwindow(rj(1),rj(2),rj(3),rj(4)) !plot scale
 call pgbox("BCNTS1",0.0,0,"BCNTS1",0.0,0)
-call pglabel("X1","X2","")
+call pglabel("Xi","Xj","")
 call pgsci(1)
 
 do i=1,ncol
