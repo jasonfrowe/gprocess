@@ -22,3 +22,10 @@ At this point you should be able to run the configure script and make.
 `./configure`  
 `make all`  
 The configure script will bomb out if a package is missing.  If successful then the *bin* directory should contain all the binaries. 
+
+To run the program use the following command in the bin directory.  
+
+`./gptest datatest.dat`  
+
+Press `enter` when asked to select graphics output device, the code should 
+now run and present a series of plots similar to the presentation.
