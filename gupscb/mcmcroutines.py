@@ -89,9 +89,9 @@ def mhgmcmc(x,llx,beta,data,func,loglikelihood,lprior,buffer,corbeta):
     else:
         xt[n]+=np.random.normal(0.0,beta[n]) #Step 2: Generate trial state with Gibbs sampler 
     
-    xt[1]=xt[1]-2*np.pi*np.floor(xt[1]/(2*np.pi))
-    if xt[1] < 0 :
-        xt[1]=xt[1]+2*np.pi
+    xt[2]=xt[2]-2*np.pi*np.floor(xt[2]/(2*np.pi))
+    if xt[2] < 0 :
+        xt[2]=xt[2]+2*np.pi
     
     llxt=loglikelihood(func,xt,data)         #Step 3 Compute log(p(x'|d))=log(p(x'))+log(p(d|x'))
     llxt+=lprior(xt) 
@@ -136,6 +136,11 @@ def demhmcmc(x,llx,beta,data,func,loglikelihood,lprior,buffer,corbeta):
         i2=int(np.random.rand()*nbuffer)
         vectorjump=buffer[i1,:]-buffer[i2,:]
         xt=x+vectorjump*corbeta
+
+    xt[2]=xt[2]-2*np.pi*np.floor(xt[2]/(2*np.pi))
+    if xt[2] < 0 :
+        xt[2]=xt[2]+2*np.pi
+
     
     llxt=loglikelihood(func,xt,data) #Step 3 Compute log(p(x'|d))=log(p(x'))+log(p(d|x'))
     llxt=llxt+lprior(xt) 
