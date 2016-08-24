@@ -5,78 +5,6 @@ from matplotlib.ticker import NullFormatter
 from matplotlib.ticker import ScalarFormatter
 import progressbar
 
-def triplot(chain,burnin,label,colour,nbin,ntick=5):
-    "Making a Triangle Plot"
-
-    nullfmt = NullFormatter()       # removing tick labels
-    deffmt = ScalarFormatter()      # adding tick labels
-    n=len(chain[1,:])               # determine number of subplots
-    plt.figure(1, figsize=(14, 14))   # make a square figure
-    wsize=0.9/n                     # size of individual panels
-
-    prange=np.zeros(shape=(n,2))    #store range of parameters in chains 
-    for i in range(0,n):
-        prange[i,0]=min(chain[burnin:,i]) #find minimum values
-        prange[i,1]=max(chain[burnin:,i]) #find maximum values
-
-    for j in range(0,n):        #loop over each variable
-        for i in range(j,n):    #loop again over each variable 
-            left, width = 0.1+j*wsize, wsize        #determine panel size: left position and width
-            bottom, height = 0.9-i*wsize, wsize     #determine panel size: bottom position and width
-            rect_scatter = [left, bottom, width, height]#save panel size position    
-            axScatter = plt.axes(rect_scatter)          #set panel size
-        
-            #put histogram on diagonals, scatter plot otherwise 
-            if i == j:
-                
-                plt.hist(chain[burnin:,j],nbin,histtype='stepfilled', normed=True, \
-                 facecolor=colour[i], alpha=0.8)
-                
-                #make a uniform sample across the parameter range
-                x_eval = np.linspace(prange[j,0], prange[j,1], num=100) 
-                kde1 = stats.gaussian_kde(chain[burnin:,j],0.3) #Kernel Density Estimate
-                #overlay the KDE
-                plt.plot(x_eval, kde1(x_eval), 'k-', lw=3)
-                
-                x1,x2,y1,y2 = plt.axis()                 
-                plt.axis((prange[j,0],prange[j,1],y1,y2))
-            else:
-                axScatter.scatter(chain[burnin:,j],chain[burnin:,i],c="black", s=1.0, alpha=0.1, \
-                 edgecolors="none")
-                plt.axis((prange[j,0],prange[j,1],prange[i,0],prange[i,1]))   
-            
-            #to use a sensible x-tick range, we have to do it manually.
-            dpr=(prange[j,1]-prange[j,0])/ntick         #make ntick ticks
-            rr=np.power(10.0,np.floor(np.log10(dpr)))
-            npr=np.floor(dpr/rr+0.5)*rr
-            plt.xticks(np.arange(np.floor(prange[j,0]/rr)*rr+npr, \
-             np.floor(prange[j,1]/rr)*rr,npr),rotation=30) #make ticks
-        
-            if i != j:    
-                #use a sensible y-tick range, we have to do it manually
-                dpr=(prange[i,1]-prange[i,0])/ntick         #make ntick ticks
-                rr=np.power(10.0,np.floor(np.log10(dpr)))
-                npr=np.floor(dpr/rr+0.5)*rr
-                plt.yticks(np.arange(np.floor(prange[i,0]/rr)*rr+npr,\
-                 np.floor(prange[i,1]/rr)*rr,npr),rotation=0) #make ticks
-        
-            axScatter.xaxis.set_major_formatter(nullfmt)  #default is to leave off tick mark labels
-            axScatter.yaxis.set_major_formatter(nullfmt)
-        
-            #if we are on the sides, add tick and axes labels
-            if i==n-1:
-                axScatter.xaxis.set_major_formatter(deffmt)
-                plt.xlabel(label[j]) 
-            if j==0 :
-                if i > 0:
-                    axScatter.yaxis.set_major_formatter(deffmt)
-                    plt.ylabel(label[i]) 
-
-
-    plt.show()
-    
-    return;
-
 def mhgmcmc(x,llx,beta,data,func,loglikelihood,lprior,buffer,corbeta):
     "A Metropolis-Hastings MCMC with Gibbs sampler"
     
@@ -224,7 +152,7 @@ def triplot(chain,burnin,label,colour,nbin,ntick=5):
     nullfmt = NullFormatter()       # removing tick labels
     deffmt = ScalarFormatter()      # adding tick labels
     n=len(chain[1,:])               # determine number of subplots
-    plt.figure(1, figsize=(10, 10))   # make a square figure
+    plt.figure(figsize=(10, 10))   # make a square figure
     wsize=0.9/n                     # size of individual panels
 
     prange=np.zeros(shape=(n,2))    #store range of parameters in chains 
