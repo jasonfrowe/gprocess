@@ -33,4 +33,4 @@ Usage: FileNumber, StarNumber
  
 To close all the pop-up windows type:
 
-close("all")
+In [4]: close("all")
