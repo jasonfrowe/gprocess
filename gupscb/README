@@ -1,0 +1,36 @@
+How to run from maestria:
+
+pip3 install --user jupyter 
+pip3 install astropy --user --upgrade
+pip3 install matplotlib --user --upgrade
+pip3 install --user scipy
+pip3 install --user progressbar2
+
+Copy all the files from github (above) into a directory your want to work from.
+
+The run:
+
+~/.local/bin/ipython
+
+In [1]: %pylab
+In [2]: %run guPsc.py 1 1
+
+The last command will run the program for GU Psc b for the 3rd night.
+To get usage information:
+
+In [3]: %run guPsc.py
+Usage: FileNumber, StarNumber
+ 
+ Filenumber 1-3: 
+  1: Gu_variab_20141011_J_normlightcurve_GU_comp.txt
+  2: Gu_variab_20141010_J_normlightcurve_GU_comp.txt
+  3: Gu_variab_20131222_J_normlightcurve_GU_comp.txt
+ 
+ Star Number: 
+  1: GU Psc b
+  2-8: comparision stars
+ 
+ 
+To close all the pop-up windows type:
+
+close("all")
