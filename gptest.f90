@@ -99,10 +99,10 @@ call pgslw(3) !thicker lines
 !plot the data
 allocate(bb(4)) !contains plot boundaries
 bb=0.0e0 !tell code to generate scale for plot
-bb(1)=-25.0  !if bb(1)!=bb(2) then these values are used for plotting
-bb(2)=200.0
+bb(1)=-35.0  !if bb(1)!=bb(2) then these values are used for plotting
+bb(2)=300.0
 bb(3)=-30.0  !if bb(3)!=bb(4) then these values are used for plotting
-bb(4)= 14.0
+bb(4)= 30.0
 call plotdata(npt,x,y,yerr,bb) !plot data
 
 !fit a straight line
