@@ -24,6 +24,8 @@ from matplotlib.ticker import ScalarFormatter
 import mcmcroutines as mcmc
 
 
+makeplots=1
+
 # ## read in data
 
 # In[3]:
@@ -73,13 +75,14 @@ data[:,4]=data[:,4]-np.mean(data[:,4])#+1.0
 
 # In[4]:
 
-plt.figure(figsize=(10,7)) 
-plt.plot(data[:,0],data[:,1],color='b',label='Target Star')
-plt.plot(data[:,0],data[:,2],color='r',label='ELC-1')
-plt.plot(data[:,0],data[:,3],color='g',label='ELC-2')
-plt.plot(data[:,0],data[:,4],color='orange',label='ELC-3')
-plt.legend()
-plt.show()
+if makeplots != 0:
+    plt.figure(figsize=(10,7)) 
+    plt.plot(data[:,0],data[:,1],color='b',label='Target Star')
+    plt.plot(data[:,0],data[:,2],color='r',label='ELC-1')
+    plt.plot(data[:,0],data[:,3],color='g',label='ELC-2')
+    plt.plot(data[:,0],data[:,4],color='orange',label='ELC-3')
+    plt.legend()
+    plt.show()
 
 
 # ## Our Model (cosine + PCA)
@@ -247,7 +250,8 @@ chain3,accept=mcmc.genchain(parin,data,betanew,niter,model,loglikelihood,lprior,
 
 # In[13]:
 
-mcmc.plotchains(chain,label,colour,burnin)
+if makeplots != 0:
+    mcmc.plotchains(chain,label,colour,burnin)
 
 
 # ## Calculate Confidence Intervals
@@ -266,33 +270,36 @@ for i in range(0,npars):
 
 # In[15]:
 
-mcmc.plotmodels(data,chain,model,burnin)
+if makeplots != 0:
+    mcmc.plotmodels(data,chain,model,burnin)
 
 
 # ## Show cosine component ontop of ELC corrected lightcurve (median values adopted)
 
 # In[16]:
 
-plt.figure(figsize=(10,7)) 
-tpars=np.copy(mm)
-tpars[0]=0.0
-mtest=model(tpars,data)
-res=data[:,1]-mtest
-plt.scatter(data[:,0],res,s=100.0,color='b',label='ELC Corrected')
-plt.xlabel('Time (hours)')
-plt.ylabel('Flux')
 
-chainlen=len(chain[:,0])
-for i in range(0,200): 
-    nchain=int(np.random.rand()*(chainlen-burnin)+burnin) 
-    tpars=np.copy(chain[nchain,:])
-    tpars[3:7]=0
+if makeplots != 0:
+    plt.figure(figsize=(10,7)) 
+    tpars=np.copy(mm)
+    tpars[0]=0.0
     mtest=model(tpars,data)
-    plt.plot(data[:,0],mtest,color='r',alpha=0.1)
+    res=data[:,1]-mtest
+    plt.scatter(data[:,0],res,s=100.0,color='b',label='ELC Corrected')
+    plt.xlabel('Time (hours)')
+    plt.ylabel('Flux')
 
-plt.plot(data[:,0],mtest,color='r',alpha=0.1,label='Cosine model')
-plt.legend()
-plt.show()
+    chainlen=len(chain[:,0])
+    for i in range(0,200): 
+        nchain=int(np.random.rand()*(chainlen-burnin)+burnin) 
+        tpars=np.copy(chain[nchain,:])
+        tpars[3:7]=0
+        mtest=model(tpars,data)
+        plt.plot(data[:,0],mtest,color='r',alpha=0.1)
+
+    plt.plot(data[:,0],mtest,color='r',alpha=0.1,label='Cosine model')
+    plt.legend()
+    plt.show()
 
 
 # ## Check convergence Tests
@@ -318,8 +325,9 @@ mcmc.calcacrate(accept,burnin,label)
 
 # In[19]:
 
-nbin=30
-mcmc.triplot(chain2,burnin,label,colour,nbin,ntick=4)
+if makeplots != 0:
+    nbin=30
+    mcmc.triplot(chain2,burnin,label,colour,nbin,ntick=4)
 
 
 # In[20]:
@@ -352,7 +360,7 @@ ll1=loglikelihood(model,pars1,data)
 print(ll1)
 
 x=mm[1:]
-amp=0.006
+amp=0.005
 pfit, pcov, infodict, errmsg, success = leastsq(fun,x,args=(data,amp),full_output=1)
 pars2=np.copy(mm); pars2[0]=amp; pars2[1:]=np.copy(pfit)
 ll2=loglikelihood(model,pars2,data)

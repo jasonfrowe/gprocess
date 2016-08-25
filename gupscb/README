@@ -30,7 +30,7 @@ Usage: FileNumber, StarNumber
   1: GU Psc b
   2-8: comparision stars
  
- 
 To close all the pop-up windows type:
 
 In [4]: close("all")
+
