@@ -16,11 +16,7 @@ def mhgmcmc(x,llx,beta,data,func,loglikelihood,lprior,buffer,corbeta):
         xt[n]+=0
     else:
         xt[n]+=np.random.normal(0.0,beta[n]) #Step 2: Generate trial state with Gibbs sampler 
-    
-    xt[2]=xt[2]-2*np.pi*np.floor(xt[2]/(2*np.pi))
-    if xt[2] < 0 :
-        xt[2]=xt[2]+2*np.pi
-    
+        
     llxt=loglikelihood(func,xt,data)         #Step 3 Compute log(p(x'|d))=log(p(x'))+log(p(d|x'))
     llxt+=lprior(xt) 
     
@@ -64,11 +60,6 @@ def demhmcmc(x,llx,beta,data,func,loglikelihood,lprior,buffer,corbeta):
         i2=int(np.random.rand()*nbuffer)
         vectorjump=buffer[i1,:]-buffer[i2,:]
         xt=x+vectorjump*corbeta
-
-    xt[2]=xt[2]-2*np.pi*np.floor(xt[2]/(2*np.pi))
-    if xt[2] < 0 :
-        xt[2]=xt[2]+2*np.pi
-
     
     llxt=loglikelihood(func,xt,data) #Step 3 Compute log(p(x'|d))=log(p(x'))+log(p(d|x'))
     llxt=llxt+lprior(xt) 
@@ -114,7 +105,7 @@ def genchain(x,data,beta,niter,func,loglikelihood,lprior,mcmcfunc,buffer=[],corb
     
     return chain, accept;
     
-def plotchains(chain,label,colour,burnin):
+def plotchains(chain,label,colour,burnin,savefig=0):
     plt.figure(figsize=(12,12)) #adjust size of figure
 
     npar=len(chain[0,:])
@@ -125,9 +116,11 @@ def plotchains(chain,label,colour,burnin):
 
     plt.xlabel('Iteration')           #x-label
 
+    if savefig != 0:
+        plt.savefig(savefig)
     plt.show()
 
-def plotmodels(data,chain,func,burnin):
+def plotmodels(data,chain,func,burnin,savefig=0):
     "Plot the original model, some chains and the mean model"
     plt.figure(figsize=(10,7)) #adjust size of figure
     plt.xlabel('time')            #x-label
@@ -144,9 +137,12 @@ def plotmodels(data,chain,func,burnin):
     #plt.plot(t,plotdata,c='r', alpha=1.0, lw=3, label='mean MC model')
     #plt.plot(t,g,c='green',lw=3, label='input model')
     plt.legend()
+    
+    if savefig != 0:
+        plt.savefig(savefig)
     plt.show()
     
-def triplot(chain,burnin,label,colour,nbin,ntick=5):
+def triplot(chain,burnin,label,colour,nbin,ntick=5,savefig=0):
     "Making a Triangle Plot"
 
     nullfmt = NullFormatter()       # removing tick labels
@@ -228,7 +224,8 @@ def triplot(chain,burnin,label,colour,nbin,ntick=5):
                             axScatter.yaxis.set_major_formatter(deffmt)
                             plt.ylabel(label[i]) 
 
-
+    if savefig != 0:
+        plt.savefig(savefig)
     plt.show()
     
     return;    
